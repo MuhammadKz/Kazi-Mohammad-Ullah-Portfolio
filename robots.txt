@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kazi-mohammad-ullah.vercel.app/sitemap.xml
