@@ -3,6 +3,9 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/((?!sitemap\\.xml|robots\\.txt|google.*\\.html).*)",
+      "destination": "/index.html"
+    }
   ]
 }
