@@ -64,3 +64,63 @@ if (contactForm) {
     contactForm.reset();
   });
 }
+
+// Custom Cursor
+(function() {
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) return;
+
+  const cursorDot = document.getElementById('cursor-dot');
+  const cursorAura = document.getElementById('cursor-aura');
+  if (!cursorDot || !cursorAura) return;
+
+  let mouseX = 0, mouseY = 0;
+  let auraX = 0, auraY = 0;
+  let currentAnimation = null;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  });
+
+  function updateAura() {
+    if (auraX !== mouseX || auraY !== mouseY) {
+      if (currentAnimation) currentAnimation.cancel();
+
+      const startX = auraX;
+      const startY = auraY;
+      const endX = mouseX;
+      const endY = mouseY;
+
+      currentAnimation = cursorAura.animate(
+        [
+          { left: startX + 'px', top: startY + 'px' },
+          { left: endX + 'px', top: endY + 'px' }
+        ],
+        {
+          duration: 500,
+          fill: 'forwards',
+          easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+        }
+      );
+
+      currentAnimation.onfinish = () => {
+        auraX = endX;
+        auraY = endY;
+      };
+
+      auraX = startX + (endX - startX) * 0.15;
+      auraY = startY + (endY - startY) * 0.15;
+    }
+    requestAnimationFrame(updateAura);
+  }
+  requestAnimationFrame(updateAura);
+
+  const hoverTargets = document.querySelectorAll('a, button, .btn, .glass-card, .skill-card, .service-card, .project-card, .social-icon, .hamburger-menu, input, textarea, .hover-target');
+  hoverTargets.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorAura.classList.add('hover-active'));
+    el.addEventListener('mouseleave', () => cursorAura.classList.remove('hover-active'));
+  });
+})();
